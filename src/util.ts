@@ -3,14 +3,16 @@ import io from './index'
 /**
  * 通知后台管理面板
  */
-export const notifyBackendManagement = (callback: (socket: SocketType) => void) => {
+export function notifyAdminPanel<T extends keyof ServerToClientEvents>(
+  evt: T,
+  ...args: Parameters<ServerToClientEvents[T]>
+) {
   io.sockets.sockets.forEach(socket => {
     if (socket.connected && socket.data.clientSide === false) {
-      callback(socket)
+      socket.emit(evt, ...args)
     }
   })
 }
-
 /**
  * 获取客户连接数
  */

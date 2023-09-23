@@ -1,8 +1,8 @@
 import 'dotenv/config'
 import { Server } from 'socket.io'
-import verifyEventHandler from './events/verify'
-import orderEventHandler from './events/order'
-import { notifyBackendManagement } from './util'
+import verifyEventListener from './events/verify'
+import orderEventListener from './events/order'
+import { notifyAdminPanel } from './util'
 
 const PORT = Number(process.env.PORT) || 8899
 
@@ -16,18 +16,16 @@ io.on('connection', socket => {
   /**
    * 参数验证事件处理
    */
-  verifyEventHandler(io, socket)
+  verifyEventListener(io, socket)
 
   /**
    * 订单模块事件处理
    */
-  orderEventHandler(io, socket)
+  orderEventListener(io, socket)
 
   socket.on('disconnect', () => {
-    notifyBackendManagement(sk => {
-      const user = socket.data.clientSide === true ? '客户' : socket.data.clientSide === false ? '后台用户' : '不明用户'
-      sk.emit('Message', `有${user}关闭了连接`)
-    })
+    const user = socket.data.clientSide === true ? '客户' : socket.data.clientSide === false ? '后台用户' : '不明用户'
+    notifyAdminPanel('Message', `有${user}关闭了连接`)
   })
 })
 

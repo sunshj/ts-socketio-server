@@ -1,4 +1,4 @@
-import { notifyBackendManagement } from '../util'
+import { notifyAdminPanel } from '../util'
 
 export default function (io: ServerType, socket: SocketType) {
   socket.on('NewOrder', orderId => {
@@ -9,11 +9,9 @@ export default function (io: ServerType, socket: SocketType) {
     })
 
     socket.data.clientSide &&
-      notifyBackendManagement(sk => {
-        sk.emit('NewOrderReceived', {
-          msg: '有一条新订单(仅后台可见)',
-          orderId,
-        })
+      notifyAdminPanel('NewOrderReceived', {
+        msg: '有一条新订单(仅后台可见)',
+        orderId,
       })
   })
 }
