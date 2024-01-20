@@ -9,9 +9,5 @@
     "outDir": "./dist",
     "typeRoots": ["./node_modules/@types", "src/shims.d.ts"]
   },
-  "include": ["./src"],
-  "ts-node": {
-    "esm": true,
-    "files": true
-  }
+  "include": ["./src"]
 }

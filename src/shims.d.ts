@@ -1,6 +1,7 @@
 import { Server, Socket } from 'socket.io'
 
 declare global {
+  type RoomSide = 'client' | 'admin'
   interface ServerToClientEvents {
     Verify: (msg: string) => void
     VerifyPassed: (msg: string) => void
@@ -17,8 +18,7 @@ declare global {
   }
 
   interface SocketData {
-    clientSide: boolean
-    receiveIdentify: boolean
+    side: RoomSide
   }
 
   type ServerType = Server<ClientToServerEvents, ServerToClientEvents, {}, SocketData>

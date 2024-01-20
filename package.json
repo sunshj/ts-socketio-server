@@ -2,19 +2,19 @@
   "name": "ts-socket.io-server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "dev": "nodemon src/index.ts",
-    "build": "rimraf dist && tsc",
+    "dev": "tsx watch src/index.ts",
+    "build": "rimraf dist && tsup src",
     "start": "node dist/index.js"
   },
-  "keywords": [],
-  "author": "",
+  "author": "sunshj",
   "license": "ISC",
   "devDependencies": {
+    "@swc/core": "^1.3.104",
     "@types/node": "^20.2.5",
-    "nodemon": "^3.0.1",
-    "ts-node": "^10.9.1",
+    "tsup": "^8.0.1",
+    "tsx": "^4.7.0",
     "typescript": "^5.0.4"
   },
   "dependencies": {

@@ -1,8 +1,7 @@
 import 'dotenv/config'
 import { Server } from 'socket.io'
-import verifyEventListener from './events/verify'
-import orderEventListener from './events/order'
-import { notifyAdminPanel } from './util'
+import { orderEventHandler, verifyEventHandler } from './events'
+import { getConnectSideAlias, getRoomConnections } from './utils'
 
 const PORT = Number(process.env.PORT) || 8899
 
@@ -14,18 +13,19 @@ const io: ServerType = new Server(PORT, {
 
 io.on('connection', socket => {
   /**
-   * 参数验证事件处理
+   * 连接认证事件处理
    */
-  verifyEventListener(io, socket)
+  verifyEventHandler(io, socket)
 
   /**
    * 订单模块事件处理
    */
-  orderEventListener(io, socket)
+  orderEventHandler(io, socket)
 
-  socket.on('disconnect', () => {
-    const user = socket.data.clientSide === true ? '客户' : socket.data.clientSide === false ? '后台用户' : '不明用户'
-    notifyAdminPanel('Message', `有${user}关闭了连接`)
+  socket.on('disconnect', async () => {
+    socket.to('admin').emit('Message', `有${getConnectSideAlias(socket.data.side)}关闭了连接`)
+    socket.to('admin').emit('Message', `当前客户连接数 ${(await getRoomConnections('client')).length}`)
+    socket.to('admin').emit('Message', `当前后台连接数 ${(await getRoomConnections('admin')).length}`)
   })
 })
 
